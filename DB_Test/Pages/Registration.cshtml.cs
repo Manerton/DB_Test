@@ -35,12 +35,7 @@ namespace DB_Test.Pages
 
         public async Task<IActionResult> OnPostRegister()
         {
-            var appUser = new Users();
-            if (Password == "Admin" && Email == "Admin")
-                appUser = new Users { Email = Email, PwHash = _authService.GetHashedPassword(Password), Role = "Admin" };
-            else
-                appUser = new Users { Email = Email, PwHash = _authService.GetHashedPassword(Password), Role = "Teacher" };
-
+            var appUser = new Users { Email = Email, PwHash = _authService.GetHashedPassword(Password), Role = "Teacher" };
             try
             {
                 await _db.Users.AddAsync(appUser);
@@ -48,10 +43,7 @@ namespace DB_Test.Pages
                 HttpContext.Session.SetString("Token", _authService.GetAuthData(Email, appUser));
                 HttpContext.Session.SetString("userId", $"{appUser.Id}");
                 HttpContext.Session.SetString("roles", $"{appUser.Role}");
-                if (appUser.Role == "Teacher")
-                    return RedirectToPage("StartPagecshtml");
-                else
-                    return RedirectToPage("Index");
+                return RedirectToPage("StartPagecshtml");
             }
             catch (Exception)
             {

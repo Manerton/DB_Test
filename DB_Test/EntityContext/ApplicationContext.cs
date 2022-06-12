@@ -1,5 +1,6 @@
 ﻿using DB_Test.EntityContext;
 using DB_Test.Services;
+using DB_Test.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationContext : DbContext
@@ -19,6 +20,11 @@ public class ApplicationContext : DbContext
     
     public IAuthService _authService;
 
+    public ApplicationContext(IAuthService authService)
+    {
+        _authService = authService;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ResultTests;Username=postgres;Password=root");
@@ -30,6 +36,9 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Users>()
              .HasIndex(u => new { u.Email })
              .IsUnique();
+
+        modelBuilder.Entity<Users>().HasData(new Users{Id=2, Email = "Admin", PwHash = _authService.GetHashedPassword("Admin"), Role="Admin"});
+
         //modelBuilder.Entity<Questions>().HasCheckConstraint("Score", "Score > 0", c => c.HasName("CK_Question_Score"));
         //modelBuilder.Entity<ResultTests>().HasCheckConstraint("SumScore", "SumScore > 0", c => c.HasName("CK_ResultTests_SumScore"));
         modelBuilder.Entity<Institutes>()
