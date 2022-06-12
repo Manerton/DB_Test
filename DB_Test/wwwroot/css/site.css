@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.board {
+    background-color: white;
+    Border-style: solid;
+    border-color: black;
+    padding: 30px;
+    border-width: 1px;
+}

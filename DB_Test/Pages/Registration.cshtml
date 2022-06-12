@@ -1,0 +1,37 @@
+﻿@page
+@model DB_Test.Pages.RegistrationModel
+@{
+    ViewData["title"] = "Регистрация";
+    Layout = "NonAuthLayout";
+}
+<div class="container">
+    <div class="text-black-100 board rounded box-shadow" style="margin: auto; width: 40%;">
+        <h2 style="text-align: center;">Регистрация нового пользователя</h2>
+        <div >
+            <form asp-page-handler="Register" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="my-3">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control"/>
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="my-3">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control"/>
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div class="my-3">
+                    <label asp-for="PasswordConfirm"></label>
+                    <input asp-for="PasswordConfirm" class="form-control" />
+                    <span asp-validation-for="PasswordConfirm"></span>
+                </div>
+                <div>
+                    <input class="btn btn-primary" style="width: 100%;" type="submit" value="Регистрация" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

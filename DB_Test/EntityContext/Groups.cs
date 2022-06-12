@@ -1,10 +1,15 @@
-﻿namespace DB_Test.EntityContext
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DB_Test.EntityContext
 {
     public class Groups
     {
         public int Id { get; set; }
-        public string? GroupName { get; set; }
-        public int DisciplineId { get; set; }
-        public Disciplines Discipline { get; set; }
+        [Required]
+        [StringLength(256, MinimumLength = 5)]
+        public string GroupName { get; set; }
+        [Required]
+        public int SpecialtieId { get; set; }
+        public Specialties specialtie { get; set; }
     }
 }

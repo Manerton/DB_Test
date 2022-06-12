@@ -1,0 +1,285 @@
+﻿@page
+@model DB_Test.Pages.QuestionsWorkModel
+@{
+    ViewData["title"] = "Работа с вопросами";
+}
+<div class="container">
+     <div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+         <h3 id="HeaderTextId">Создание вопроса</h3>
+    </div>
+
+    <div class="d-flex align-items-center p-3 mt-2 text-black-100 board box-shadow" style="justify-content: space-between;
+        background-color: #262626;
+        color: white;">
+        <label for="discription" style="margin: 0px; width: 100%;">Введите тему вопроса</label>
+    </div>
+    <div class="hide align-items-center p-3 text-black-100 board box-shadow">
+        <div>Введите тему:</div>
+        <input type="text" class="form-control" id="inputTheme">
+    </div>
+
+
+    <div class="d-flex align-items-center p-3 mt-2 text-black-100 board box-shadow" style="justify-content: space-between;
+        background-color: #262626;
+        color: white;">
+        <label for="discription" style="margin: 0px; width: 100%;">Введите описание вопроса</label>
+    </div>
+    <div class="hide align-items-center p-3 text-black-100 board box-shadow">
+        <div>Введите вопрос:</div>
+        <textarea class="form-control" id="inputDescription" style="width: 100%; height: 100px;"></textarea>
+    </div>
+
+    <div class="d-flex align-items-center p-3 mt-2 text-black-100 board box-shadow" style=" justify-content: space-between;
+            background-color: #262626;
+            color: white;">
+            <label for="enterAnyAnswer1" style="margin: 0px; width: 100%;">Заполнение вопроса</label>
+    </div>
+
+    <div id="answerFormPlace">
+    </div>
+
+     <div class="d-flex align-items-center p-3 mt-2 text-black-100 board box-shadow" style="justify-content: space-between;
+        background-color: #262626;
+        color: white;">
+        <label for="cost" style="margin: 0px; width: 100%;">Укажите стоимость вопроса в баллах:</label>
+    </div>
+    <div class="hide align-items-center p-3 text-black-100 board box-shadow">
+        <div class="d-flex align-items-center" style="justify-content: space-between; text-align: center;">
+            <div style="white-space: nowrap;">Стоимость вопроса = </div>
+            <input type="text" id="inputCost" style="width: 70%;">
+            <div style="white-space: nowrap;">баллов </div>
+        </div>
+    </div>
+    <div class="m-2" style="text-align: center;"> 
+      <button id="SaveLab" class="btn btn-primary btn-lg" onclick="CollectingDataChoosingAlternatives()">Сохранить</button>
+    </div>
+</div>
+
+<script>
+    var FlagNewQuestion;
+    var idQuestion
+    showChoosingAlternatives()
+    function showChoosingAlternatives() {
+        var queryString = decodeURIComponent(window.location.search); 
+        queryString = queryString.substring(1);
+        var queries = queryString.split("&"); 
+        idQuestion = queries[0].split("=")[1];
+        if (idQuestion != "undefined") {
+            FlagNewQuestion = false;
+            
+        }
+        else 
+        {
+            FlagNewQuestion = true;
+        }
+
+        let mainForm = document.getElementById("answerFormPlace");
+
+        let divContainer = document.createElement("div");
+        divContainer.className = "hide align-items-center p-3 text-black-100 board box-shadow";
+        divContainer.id = "choosingalternatives";
+        let addBtn = document.createElement("button");
+        addBtn.type = "submit"
+        addBtn.className = "btn btn-primary edit-item";
+        addBtn.textContent = "Добавить вариант ответа";
+        addBtn.setAttribute('onclick', 'addChoosingAlternativesAnswerPlace()');
+        divContainer.appendChild(addBtn);
+
+        for (let i = 1; i < 3; i++) {
+            let divEnterBlock1 = document.createElement("div");
+            divEnterBlock1.className = "d-flex align-items-center p-2";
+            divEnterBlock1.style = "justify-content: space-between; text-align: center;";
+
+            let divText1 = document.createElement("div");
+            divText1.textContent = "Вариант " + i;
+            let inputText1 = document.createElement("input");
+            inputText1.type = "text";
+            inputText1.id = "contactChoice" + i;
+            inputText1.style = "width: 85%;";
+            let radioBtn = document.createElement("input");
+            radioBtn.type = "radio";
+            radioBtn.name = "trueAnswer";
+            radioBtn.id = "radioChoise" + i;
+            radioBtn.style = "height: 1em; width: 1em;";
+            radioBtn.value = inputText1.id;
+
+            divEnterBlock1.appendChild(divText1);
+            divEnterBlock1.appendChild(inputText1);
+            divEnterBlock1.appendChild(radioBtn);
+            divContainer.appendChild(divEnterBlock1);
+        }
+        mainForm.appendChild(divContainer);
+    }
+
+    function randomAlphaNumeric() {
+        return Math.random().toString(36).charAt(2);
+    };
+
+    function createFromPattern(pattern) {
+        pattern = pattern.split('');
+        return pattern.map(x => x.replace('x', randomAlphaNumeric())).join('');
+    };
+
+    function CollectingDataChoosingAlternatives() {
+        let size = document.getElementById("choosingalternatives").children.length;
+        let List = [];
+        for (let i = 1; i < size; ++i) {
+            let Answer = document.getElementById("contactChoice" + i).value
+            if (Answer.length == 0) {
+                alert('Поле ответа ' + i + ' не заполнено');
+                return;
+            }
+            List.push(Answer);
+        }
+       
+        if (FlagNewQuestion) {
+            createChoosingAlternatives(List);
+        }
+        else {
+            updateChoosingAlternatives(List);
+        }
+    }
+
+    function createChoosingAlternatives(AnswerList) 
+    {
+
+        let TrueAnswerID = document.querySelector('input[name="trueAnswer"]:checked');
+        if (TrueAnswerID == null) {
+            alert('Правильный ответ не выбран!');
+            return;
+        }
+        let TrueAnserVal = document.getElementById(TrueAnswerID.value).value;
+       
+
+        let QuestionsDTO = {
+            TextQuestions: document.getElementById("inputDescription").value,
+            Theme: document.getElementById("inputTheme").value,
+            Scores: document.getElementById("inputCost").value,
+            TrueAnswer: TrueAnserVal,
+            Answers: AnswerList
+        }
+
+
+        if (QuestionsDTO.TextQuestions.length == 0 ||
+            QuestionsDTO.Theme.length == 0 ||
+            QuestionsDTO.Scores.length == 0 || 
+            QuestionsDTO.TrueAnswer.length == 0 || 
+            QuestionsDTO.Answers.length == 0) {
+            alert('Одно из полей не заполнено!');
+            return;
+        }
+
+        let tempInputScore = document.getElementById("inputCost").value;
+
+        if(tempInputScore <= 0)
+        {
+            alert('В поле стоимость вопроса введено не корректное значение');
+            return;
+        }
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Questions/AddQuestion',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(QuestionsDTO),
+                beforeSend: (xhr) => {
+                },
+                success: (response) => {
+                    document.location.reload(true);
+                    document.location.href = "/Questions";
+                },
+                error: (fail) => {
+                    alert(fail.responseText);
+                }
+            }
+        );
+    }
+
+    function updateChoosingAlternatives(List) {
+        let TrueAnswerID = document.querySelector('input[name="trueAnswer"]:checked');
+        if (TrueAnswerID == null) {
+            alert('Правильный ответ не выбран!');
+            return;
+        }
+        let TrueAnserVal = document.getElementById(TrueAnswerID.value).value;
+
+        let QuestionsDTO = {
+            TextQuestions: document.getElementById("inputDescription").value,
+            Theme: document.getElementById("inputTheme").value,
+            Scores: document.getElementById("inputCost").value,
+            TrueAnswer: TrueAnserVal,
+            Answers: AnswerList
+        }
+
+        if (QuestionsDTO.TextQuestions.length == 0 ||
+            QuestionsDTO.Theme.length == 0 ||
+            QuestionsDTO.Scores.length == 0 || 
+            QuestionsDTO.TrueAnswer.length == 0 || 
+            QuestionsDTO.Answers.length == 0) {
+            alert('Одно из полей не заполнено!');
+            return;
+        }
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Questions/EditQuestion',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(QuestionsDTO),
+                beforeSend: (xhr) => {
+                },
+                success: (response) => {
+                    document.location.reload(true);
+                   document.location.href = "/Questions";
+                },
+                error: (fail) => {
+                    alert(fail.responseText);
+                }
+            }
+        );
+    }
+
+
+    function addChoosingAlternativesAnswerPlace() {
+        var mainForm = document.getElementById("choosingalternatives");
+        var i = document.getElementById("choosingalternatives").children.length;
+        var tempForm = document.createElement("div");
+        tempForm.id = "id" + createFromPattern('xxxxxxxxx');
+        tempForm.className = "d-flex align-items-center p-2";
+        tempForm.style = "justify-content: space-between;";
+        var name = document.createElement("div");
+        name.style = "white-space: nowrap;";
+        name.textContent = "Вариант " + i; 
+        var textForm = document.createElement("input");
+        textForm.type = "text";
+        textForm.style = "width: 85%;";
+        textForm.id = "contactChoice" + i;
+        textForm.style = "width: 85%;";
+        var radioBtn = document.createElement("input");
+        radioBtn.type = "radio";
+        radioBtn.name = "trueAnswer";
+        radioBtn.style = "height: 1em; width: 1em;";
+        radioBtn.value = textForm.id;
+        radioBtn.id = "radioChoise" + i;
+
+        tempForm.appendChild(name);
+        tempForm.appendChild(textForm);
+        tempForm.appendChild(radioBtn);
+        tempForm.innerHTML += '<button class="btn close" onclick="deleteAnswerPlace(' + mainForm.id + ',' + tempForm.id + ')"><i class="fa fa-trash"></i></button>';
+        mainForm.appendChild(tempForm);
+    }
+
+
+
+
+    function deleteAnswerPlace(delPlace, delId) {
+        var tempForm = delPlace.id;
+        var tempchild = delId.id;
+        var mainForm = document.getElementById(tempForm);
+        var child = document.getElementById(tempchild);
+        mainForm.removeChild(child);
+    }
+</script>

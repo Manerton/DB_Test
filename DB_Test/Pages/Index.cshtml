@@ -1,10 +1,40 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+   Layout = "NonAuthLayout";
 }
+<div class="parent" style="max-width: auto !important;">
+    <div class="text-black-100 board rounded box-shadow" style="margin: auto; width: 40%;">
+        
+            <h1 style="text-align: center;">Авторизация</h1>
+        
+        <div>
+            <form asp-page-handler="Login" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div style = "padding: 10px">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div style = "padding: 10px">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div>
+                    <div class='child inline-block-child' style = "padding: 10px">
+                        <input class="btn btn-primary" type="submit" value="Войти" style=" width: 100%;"/>
+                    </div>
+                    <div style="text-align: center;">
+                        <a asp-page="/Registration">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,59 @@
+﻿@page
+@model DB_Test.Pages.GroupDisciplineLinkModel
+@{
+    ViewData["title"] = "Связь между группами и дисциплинами";
+}
+<div class="container">
+    <h3>Настройка связи групп и дисциплингруппу</h3>
+    <div class="d-flex align-items-center my-2">
+        <label >Выберите группу</label>
+        <form method="PostChange"> 
+            <select asp-items="Model.Groups" asp-for="SelectedGroupId" class="mx-2" name="GroupId" onchange="this.form.submit()"></select>
+            @if (!Model.IsSelected)
+            {
+                <button type="submit" class="btn-primary" name="Type" value="select" onchange="this.form.submit()">Изменить список</button>
+            }
+        </form>
+    </div> 
+
+    @if(Model.Groups.Count != 0)
+    {
+        <div>
+            @if (Model.IsSelected)
+            {
+                <h5>Выберите дисциплины</h5>
+
+                <form asp-page-handler="Checked" method="post">
+                    <input type="submit">
+                    <input name="SelectedGroupId" value="@Model.SelectedGroupId" type="hidden">
+                    @for(int i = 0; i < Model.Disciplines.Count; ++i)
+                    {
+                        <div class="d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow" style="justify-content: space-between;">
+                            <input type="hidden" asp-for="IdChecked[i]" value="@int.Parse(Model.Disciplines[i].Value)">
+                            <input type="checkbox" asp-for="ListChecked[i]">
+                            <label>@Model.Disciplines[i].Text</label>
+                        </div>
+                    }
+                </form>
+            }
+            else
+            {
+                <h5>Список выбранных дисциплин</h5>
+
+                @foreach(var discipline in Model.GroupDiscipline)
+                {
+                    <div class="d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow" style="justify-content: space-between;">
+                        <label>@discipline.Text</label>
+                        <form asp-page-handler="Delete" method="post">
+                            <input name="SelectedGroupId" value="@Model.SelectedGroupId" type="hidden">
+                            <input name="DisciplineId" value="@discipline.Value" type="hidden">
+                            <button class="btn btn-danger">Удалить</button>
+                        </form>
+                    </div>
+                }
+            
+            }
+        </div>
+    }
+</div>
+

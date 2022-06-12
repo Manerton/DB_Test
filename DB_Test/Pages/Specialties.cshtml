@@ -1,0 +1,114 @@
+﻿@page 
+@model DB_Test.Pages.SpecialtiesModel
+@{
+     ViewData["Title"] = "Специальности";
+}
+<div class="container">
+
+    @if(Model.Institutes.Count == 0)
+    {
+        <div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+            <h3>Список специальностей</h3>
+            <form action="\Institutes" method="get" target="_blank">
+                <button class="btn btn-success btn-lg" type="submit">Перейти к созданию институтов</button>
+            </form>
+        </div>
+        <div class="m-2" style="text-align: center">Для создания специальностей необходимо создать "Интитуты"</div>
+    }
+    else
+    {
+        <div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+             <h3>Список специальностей</h3>
+             <div>
+                <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalWindow">Добавить специальность</button>
+            </div>
+        </div>
+        <form method="PostChange" >
+            <select name="InstituteId" onchange="this.form.submit()" asp-items="Model.Institutes">
+               
+            </select>
+      </form>
+        foreach(var specialtie in Model.Specialties)
+        {
+            <div class="d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow" style="justify-content: space-between;">
+                <label>@specialtie.SpecialtiesName</label>
+                <div class="d-flex">
+                    <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalWindow" data-bs-whatever="@specialtie.Id">Редактировать</button>
+                    <form method="post" asp-action="DeleteSpecialtie" asp-controller="Specialties"> 
+                        <input name="SpecialtieId" value="@specialtie.Id" type="hidden">
+                        <button class="btn btn-danger mx-1">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalWindow" tabindex="-1" aria-labelledby="modalWindowLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalWindowLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="AddForm">
+          <form method="post" asp-controller="Specialties" asp-action="AddSpecialtie" > 
+              <div class="modal-body">
+                    <label for="recipient-name" class="col-form-label">Введите название специальности:</label>
+                    <input name="SpecialtiesName" class="form-control" id="recipient-name">
+                    <label for="InstituteId" class="col-form-label">Выберите институт:</label>
+                     <select name="InstituteId" asp-items="Model.Institutes"></select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+              </div>
+           </form>
+       </div>
+       <div id="UpdateForm"> 
+           <form method="post" asp-controller="Specialties" asp-action="EditSpecialtie"> 
+              <div class="modal-body">
+                    <input name="Id" type="hidden" id="updateId">
+                    <label for="recipient-name" class="col-form-label">Введите название специальности:</label>
+                    <input name="SpecialtiesName" class="form-control" id="recipient-name">
+                    <label for="InstituteId" class="col-form-label">Выберите институт:</label>
+                   <select name="InstituteId" asp-items="Model.Institutes"></select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+              </div>
+           </form>
+       </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    var exampleModal = document.getElementById('modalWindow');
+    exampleModal.addEventListener('show.bs.modal', function (event) 
+    {
+      var button = event.relatedTarget;
+      var modalTitle = exampleModal.querySelector('.modal-title');
+      var recipient = button.getAttribute('data-bs-whatever');
+      if(recipient)
+      {
+        modalTitle.textContent = "Редактирование специальности";
+        var tempUpdate = document.getElementById("UpdateForm");
+        tempUpdate.style="display: block;";
+        var tempAdd = document.getElementById("AddForm");
+        tempAdd.style="display: none;";
+        var tempId = document.getElementById("updateId");
+        tempId.value = recipient;
+      }
+      else
+      {
+        modalTitle.textContent = "Создание специальности";
+        var tempUpdate = document.getElementById("UpdateForm");
+        tempUpdate.style= "display: none;";
+        var tempAdd = document.getElementById("AddForm");
+        tempAdd.style = "display: block;";
+      }
+    })
+</script>

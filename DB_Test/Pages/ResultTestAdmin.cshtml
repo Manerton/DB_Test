@@ -1,0 +1,33 @@
+﻿@page
+@model DB_Test.Pages.ResultTestAdminModel
+@{
+
+}
+<div class="container">
+     <div class="d-flex d-flex align-items-end" style="justify-content: space-between;">
+         <h3>Список результатов тестов</h3>
+    </div>
+    @if(Model.ResultTest.Count == 0)
+    {
+        <div class="m-2" style="text-align: center">Результаты отсутствуют так как не было создано ни одного теста</div>
+    }
+    else
+    {
+        <form method="PostChange" >
+            <select name="groupId" onchange="this.form.submit()" asp-items="Model.Groups"></select>
+            <select name="testId" onchange="this.form.submit()" asp-items="Model.Tests"></select>
+        </form>
+
+        foreach(var result in Model.ResultTest)
+        {
+            <div class="d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow" style="justify-content: space-between;">
+                <label>@result.StudentName</label>
+                <label>@result.SumScore</label>
+               <form method="post" asp-page-handler="Delete"> 
+                    <input name="resultId" value="@result.IdResult" type="hidden">
+                    <button class="btn btn-danger mx-1">Удалить</button>
+                </form>
+            </div>
+        }
+    }
+</div>
