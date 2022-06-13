@@ -48,7 +48,7 @@ namespace DB_Test.Pages
             catch (Exception)
             {
                 Response.StatusCode = 400;
-                await Response.WriteAsync("Неверные данные пользователя");
+                ModelState.AddModelError("", "Неверные данные пользователя");
                 return RedirectToPage("Registration");
             }
         }

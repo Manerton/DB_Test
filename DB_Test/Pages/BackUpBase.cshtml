@@ -1,0 +1,45 @@
+﻿@page
+@model DB_Test.Pages.BackUpBaseModel
+@{
+    Layout = "LayoutAdmin";
+}
+<div class="container">
+    <div style="text-align: center;" asp-validation-summary="ModelOnly"></div>
+    <div class="d-flex justify-content-between">
+        <div >
+            <h2 >Резервное копирование базы данных</h2>
+            <div >
+                <form asp-page-handler="BackUp" method="post">
+                    <div class="my-3">
+                        <label class="col-5" asp-for="outFile"></label>
+                        <input asp-for="outFile" />
+                        <span asp-validation-for="outFile"></span>
+                    </div>
+                    <div>
+                        <label class="col-5">   </label>
+                        <input class="btn btn-primary" type="submit" value="Сохранить" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div >
+            <h2 >Восстановление базы данных</h2>
+            <div>
+                <form asp-page-handler="Restore" method="post">
+                    <div class="my-3">
+                        <label class="col-5" asp-for="inFile"></label>
+                        <input asp-for="inFile" />
+                        <span asp-validation-for="inFile"></span>
+                    </div>
+                    <div>
+                        <label class="col-5">   </label>
+                        <input class="btn btn-primary" type="submit" value="Сохранить" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

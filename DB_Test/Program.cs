@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ApplicationContext, ApplicationContext>();
 builder.Services.AddSingleton<IAuthService>(new AuthService(builder.Configuration));
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpClient();
