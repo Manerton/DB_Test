@@ -25,7 +25,7 @@ namespace DB_Test.Pages
             _context = context;
         }
 
-        public async Task<IActionResult> OnPostAddDisc()
+        public async Task<IActionResult> OnPostAddDisc(string DisciplinName)
         {
             try
             {

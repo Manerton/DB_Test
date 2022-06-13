@@ -64,7 +64,7 @@ namespace DB_Test.Pages
                 return Redirect("/Error");
             _context.ResultTests.Remove(resultTemp);
             await _context.SaveChangesAsync();
-            return Redirect("/Tests");
+            return Redirect("/ResultTestAdmin");
         }
     }
 }
