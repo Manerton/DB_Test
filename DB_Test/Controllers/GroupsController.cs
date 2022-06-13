@@ -22,8 +22,14 @@ namespace DB_Test.Controllers
 
         public async Task<IActionResult> AddGroup(Groups groups)
         {
-            await _db.Groups.AddRangeAsync(groups);
-            await _db.SaveChangesAsync();
+            try
+            {
+                await _db.Groups.AddRangeAsync(groups);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+            }
             return Redirect("/Groups?SpecialtieId=" + groups.SpecialtieId);
         }
 

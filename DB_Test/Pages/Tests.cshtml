@@ -10,7 +10,7 @@
             <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalWindow">Добавить тест</button>
         </div>
     </div>
-    
+    <div asp-validation-summary="ModelOnly"></div>
     @foreach(var disciplines in Model.Test)
     {
         <div class="d-flex align-items-center p-3 my-3 text-black-100 board rounded box-shadow" style="justify-content: space-between;">

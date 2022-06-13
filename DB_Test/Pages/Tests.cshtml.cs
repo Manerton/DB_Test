@@ -43,18 +43,41 @@ namespace DB_Test.Pages
             var QuestionsTemp = await Task.Run(() => _context.Questions.Where(_ => true).ToList());
             var TestTemp = new Tests { Id = Guid.NewGuid(), Name = TestName, CountQuestions = 0, DisciplineId = disciplineId };
 
-            await _context.Tests.AddAsync(TestTemp);
-            for (int i = 0; i < QuestionsTemp.Count(); ++i)
+            try
             {
-                if (ListChecked[i])
+                await _context.Tests.AddAsync(TestTemp);
+                for (int i = 0; i < QuestionsTemp.Count(); ++i)
                 {
-                    var testQuestion = new TestsQuestionsLink { QuestionId = QuestionsTemp[i].Id, TestId = TestTemp.Id };
-                    await _context.TestsQuestionsLink.AddAsync(testQuestion);
+                    if (ListChecked[i])
+                    {
+                        var testQuestion = new TestsQuestionsLink { QuestionId = QuestionsTemp[i].Id, TestId = TestTemp.Id };
+                        await _context.TestsQuestionsLink.AddAsync(testQuestion);
+                    }
                 }
+                await _context.SaveChangesAsync();
+                await CreateResultTests(TestTemp);
+                
             }
-            
-            await _context.SaveChangesAsync();
-            await CreateResultTests(TestTemp);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Тест с таким названием уже создан");
+
+                Test = _context.Tests.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+
+                Discipline = await Task.Run(() => _context.Disciplines.Select(z => new SelectListItem
+                {
+                    Value = z.Id.ToString(),
+                    Text = z.DisciplineName
+                }).ToList());
+
+                Questions = await Task.Run(() => _context.Questions.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.TextQuestions
+                }).ToList());
+
+                return Page();
+            }
             return Redirect("/Tests");
         }
 

@@ -12,9 +12,8 @@ namespace DB_Test.Pages
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Teacher")]
     public class InstitutesModel : PageModel
     {
-        [Required(ErrorMessage = "Необходимо ввести почту")]
-        [Display(Name = "InstituteName")]
-        public string? InstituteName { get; set; }
+        [Required(ErrorMessage = "Необходимо ввести название института")]
+        public string? instituteName { get; set; }
 
         public readonly ApplicationContext _context;
         public List<Institutes> Institutes { get; set; }
@@ -25,11 +24,11 @@ namespace DB_Test.Pages
            
         }
 
-        public async Task<IActionResult> OnPostAddInst()
+        public async Task<IActionResult> OnPostAddInst(string instituteName)
         {
             try
             {
-                var institute = new Institutes { InstitutesName = InstituteName};
+                var institute = new Institutes { InstitutesName = instituteName };
                 await _context.Institutes.AddAsync(institute);
                 await _context.SaveChangesAsync();
             }

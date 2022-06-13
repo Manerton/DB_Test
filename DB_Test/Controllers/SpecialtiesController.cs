@@ -23,8 +23,14 @@ namespace DB_Test.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSpecialtie(Specialties specialties)
         {
-            await _db.Specialties.AddAsync(specialties);
-            await _db.SaveChangesAsync();
+            try
+            {
+                await _db.Specialties.AddAsync(specialties);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+            }
             return Redirect("/Specialties?InstituteId="+ specialties.InstituteId);
             //return RedirectToAction("Index", "Specialties", specialties.InstituteId);
         }

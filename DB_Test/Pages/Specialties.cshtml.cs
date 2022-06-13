@@ -4,6 +4,7 @@ using DB_Test.EntityContext;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 namespace DB_Test.Pages
 {
@@ -21,6 +22,7 @@ namespace DB_Test.Pages
         {
             _context = context;
         }
+
 
         public async Task OnGetAsync(int? InstituteId)
         {

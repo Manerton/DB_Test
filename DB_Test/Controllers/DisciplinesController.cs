@@ -21,8 +21,13 @@ namespace DB_Test.Controllers
 
         public async Task<IActionResult> AddDiscipline(Disciplines disciplines)
         {
-            await _db.Disciplines.AddAsync(disciplines);
-            await _db.SaveChangesAsync();
+            try
+            {
+                await _db.Disciplines.AddAsync(disciplines);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            { }
             return RedirectToAction("Index");
         }
 
